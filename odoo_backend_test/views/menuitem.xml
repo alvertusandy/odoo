@@ -1,0 +1,12 @@
+<odoo>
+    <menuitem name="Materials"
+        id="menu_materials_root"
+        sequence="100">
+
+        <menuitem id="manu_materials_parent" name="Materials" sequence="5">
+            <menuitem id="manu_material_material" 
+                    action="odoo_backend_test.action_material_material" 
+                    sequence="5"/>
+        </menuitem>
+    </menuitem>
+</odoo>
