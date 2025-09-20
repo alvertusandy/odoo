@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_work_order_cancel" model="ir.ui.view">
+        <field name="name">view.work.order.cancel</field>
+        <field name="model">work.order.cancel</field>
+        <field name="arch" type="xml">
+            <form string="Work Order Cancel">
+                <group>
+                    <field name="reason"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

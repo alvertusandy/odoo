@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="booking_order_view_order_form" model="ir.ui.view">
+        <field name="name">booking.order.view.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header/button[@name='action_confirm'][2]" position="before">
+                <button name="action_check_team" type="object" string="Check" class="btn-primary" 
+                        invisible="not context.get('from_booking_order_menu')"/>
+            </xpath>
+            <xpath expr="//form/sheet/div[@name='button_box']/button[@name='action_view_invoice']" position="after">
+                <button name="action_get_work_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': [('work_orders_count', '=', 0)]}"
+                        invisible="not context.get('from_booking_order_menu')">
+                        <field name="work_orders_count" widget="statinfo" string="Work Orders"/>
+                </button>
+            </xpath>
+            <xpath expr="//form/sheet/group[1]/group[1]/field[@name='partner_id']" position="before">
+                <field name="is_booking_order" string="Booking Order?" 
+                    attrs="{'readonly' : [('state', 'in', ('sale','done','cancel'))]}" 
+                    invisible="not context.get('from_booking_order_menu')" />
+                <field name="service_team_id" options="{'no_create_edit': True}" 
+                    attrs="{'readonly' : [('state', 'in', ('sale','done','cancel'))],
+                            'required' : [('is_booking_order', '=', True)]}"  
+                    invisible="not context.get('from_booking_order_menu')" />
+                <field name="service_leader_id" options="{'no_create_edit': True}" 
+                    attrs="{'readonly' : [('state', 'in', ('sale','done','cancel'))],
+                            'required' : [('is_booking_order', '=', True)]}" 
+                    invisible="not context.get('from_booking_order_menu')" />
+                <field name="service_member_ids" widget="many2many_tags" options="{'no_create_edit': True}" 
+                    attrs="{'readonly' : [('state', 'in', ('sale','done','cancel'))],
+                            'required' : [('is_booking_order', '=', True)]}"  
+                    invisible="not context.get('from_booking_order_menu')" />
+                <field name="start_book" attrs="{'readonly' : [('state', 'in', ('sale','done','cancel'))],
+                                                'required' : [('is_booking_order', '=', True)]}" 
+                    invisible="not context.get('from_booking_order_menu')" />
+                <field name="end_book" attrs="{'readonly' : [('state', 'in', ('sale','done','cancel'))],
+                                                'required' : [('is_booking_order', '=', True)]}" 
+                    invisible="not context.get('from_booking_order_menu')" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="booking_order_view_quotation_tree" model="ir.ui.view">
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="is_booking_order" string="Booking Order?" />
+                <field name="service_team_id" options="{'no_create_edit': True}"/>
+                <field name="service_leader_id" options="{'no_create_edit': True}"/>
+                <field name="service_member_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                <field name="start_book" />
+                <field name="end_book" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_booking_order" model="ir.actions.act_window">
+        <field name="name">Booking Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="domain">[('is_booking_order', '=', True)]</field>
+        <field name="context">{'from_booking_order_menu': True}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create your Booking Order.
+            </p>
+        </field>
+    </record>
+
+    <record id="sale.menu_sale_invoicing" model="ir.ui.menu">
+        <field name="sequence">7</field>
+    </record>
+
+    <menuitem
+        id="menu_booking_root"
+        parent="sales_team.menu_base_partner"
+        sequence="6"
+        name="Booking"/>
+    
+    <menuitem 
+        id="menu_booking_order"
+        parent="booking_order_AlbertusAndySetyaputra_19092025.menu_booking_root"
+        action="booking_order_AlbertusAndySetyaputra_19092025.action_booking_order"
+        sequence="1"
+        name="Booking Order"/>
+</odoo>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_work_order_kanban" model="ir.ui.view">
+        <field name="name">view.work.order.kanban</field>
+        <field name="model">work.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_example" default_group_by="state">
+                <field name="name"/>
+                <field name="order_id"/>
+                <field name="team_id"/>
+                <field name="leader_id"/>
+                <field name="member_ids"/>
+                <field name="start_plan"/>
+                <field name="end_plan"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+                <field name="note"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_primary_left">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div class="o_kanban_primary_right">
+                                <span class="badge">
+                                    <field name="state"/>
+                                </span>
+                            </div>
+                            <div class="o_kanban_details">
+                                <div>
+                                    <field name="order_id"/>
+                                </div>
+                                <div>
+                                    <field name="team_id"/> / <field name="leader_id"/>
+                                </div>
+                                <div>
+                                    <span>Start:</span> <field name="start_date"/>
+                                </div>
+                                <div>
+                                    <span>End:</span> <field name="end_date"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_footer">
+                                <field name="note"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_work_order_calendar" model="ir.ui.view">
+        <field name="name">view.work.order.calendar</field>
+        <field name="model">work.order</field>
+        <field name="arch" type="xml">
+            <calendar string="Work Order" color="state" date_start="start_date" end_date="end_date">
+                <field name="name" />
+                <field name="order_id" />
+                <field name="team_id" />
+                <field name="leader_id" />
+                <field name="member_ids" widget="many2many_tags" />
+                <field name="start_plan" />
+                <field name="end_plan" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="state" />
+                <field name="note" />
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_work_order_tree" model="ir.ui.view">
+        <field name="name">view.work.order.tree</field>
+        <field name="model">work.order</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <tree string="Work Order">
+                <field name="name" />
+                <field name="order_id" />
+                <field name="team_id" />
+                <field name="leader_id" />
+                <field name="member_ids" widget="many2many_tags" />
+                <field name="start_plan" />
+                <field name="end_plan" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="state" />
+                <field name="note" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_work_order_graph" model="ir.ui.view">
+        <field name="name">view.work.order.graph</field>
+        <field name="model">work.order</field>
+        <field name="arch" type="xml">
+            <graph string="Work Order">
+                <field name="name" />
+                <field name="order_id" />
+                <field name="team_id" />
+                <field name="leader_id" />
+                <field name="member_ids" widget="many2many_tags" />
+                <field name="start_plan" />
+                <field name="end_plan" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="state" />
+                <field name="note" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_work_order_pivot" model="ir.ui.view">
+        <field name="name">view.work.order.pivot</field>
+        <field name="model">work.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Work Orders Analysis">
+                <field name="team_id" type="row"/>
+                <field name="leader_id" type="row"/>
+                <field name="order_id" type="row"/>
+                <field name="state" type="row"/>
+                
+                <field name="start_plan" type="col"/>
+                <field name="end_plan" type="col"/>
+                <field name="start_date" type="col"/>
+                <field name="end_date" type="col"/>
+
+                <field name="id" type="measure"/> 
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_work_order_form" model="ir.ui.view">
+        <field name="name">view.work.order.tree</field>
+        <field name="model">work.order</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Work Order" create="0">
+                <header>
+                    <button name="action_start" states="pending" type="object" string="Start Work" class="btn-primary"/>
+                    <button name="action_end" states="in_progress" type="object" string="End Work" class="btn-primary"/>
+                    <button name="action_reset" states="in_progress" type="object" string="Reset" class="btn-primary"/>
+                    <button name="action_cancel" states="pending,in_progress,done" type="object" string="Cancel" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,in_progress,done,cancel"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group name="work_order_root_1">
+                        <group name="work_order_child_1">
+                            <field name="order_id" options="{'no_create_edit': True}" />
+                            <field name="partner_id" options="{'no_create_edit': True}" />
+                            <field name="team_id" options="{'no_create_edit': True}"
+                                attrs="{'readonly' : [('state', 'in', ('done','cancel'))]}" />
+                            <field name="leader_id" options="{'no_create_edit': True}" 
+                                attrs="{'readonly' : [('state', 'in', ('done','cancel'))]}"/>
+                            <field name="member_ids" widget="many2many_tags" options="{'no_create_edit': True}" 
+                                attrs="{'readonly' : [('state', 'in', ('done','cancel'))]}" />
+                        </group>
+
+                        <group>
+                            <field name="start_plan" attrs="{'readonly' : [('state', 'in', ('done','cancel'))]}" />
+                            <field name="end_plan" attrs="{'readonly' : [('state', 'in', ('done','cancel'))]}" />
+                            <field name="start_date" />
+                            <field name="end_date" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="notes" string="Note">
+                            <field name="note" class="oe_inline" placeholder="Setup notes for work order."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_work_order" model="ir.actions.act_window">
+        <field name="name">Work Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">work.order</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="booking_order_AlbertusAndySetyaputra_19092025.view_work_order_tree"/>
+        <field name="view_mode">tree,form,kanban,calendar,graph,pivot</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create your Work Order.
+            </p>
+        </field>
+    </record>
+
+    <menuitem 
+        id="menu_work_order"
+        parent="booking_order_AlbertusAndySetyaputra_19092025.menu_booking_root"
+        action="booking_order_AlbertusAndySetyaputra_19092025.action_work_order"
+        sequence="5"
+        name="Work Order"
+    />
+</odoo>

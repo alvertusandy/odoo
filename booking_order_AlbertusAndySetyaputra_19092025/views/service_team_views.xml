@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_service_team_tree" model="ir.ui.view">
+        <field name="name">view.service.team.tree</field>
+        <field name="model">service.team</field>
+        <field name="priority">4</field>
+        <field name="arch" type="xml">
+            <tree string="Service Team">
+                <field name="name" />
+                <field name="leader_id" />
+                <field name="member_ids" widget="many2many_tags" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_service_team_form" model="ir.ui.view">
+        <field name="name">view.service.team.form</field>
+        <field name="model">service.team</field>
+        <field name="arch" type="xml">
+            <form string="Service Team">
+                <header></header>
+                <sheet>
+                    <group name="service_root_1">
+                        <group name="service_child_1">
+                            <field name="name" />
+                            <field name="leader_id"  options="{'no_create_edit': True}" />
+                            <field name="member_ids" widget="many2many_tags" options="{'no_create_edit': True}" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_service_team" model="ir.actions.act_window">
+        <field name="name">Service Team</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">service.team</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="booking_order_AlbertusAndySetyaputra_19092025.view_service_team_tree"/>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create your Service Team.
+            </p>
+        </field>
+    </record>
+
+    <menuitem 
+        id="menu_service_team"
+        parent="booking_order_AlbertusAndySetyaputra_19092025.menu_booking_root"
+        action="booking_order_AlbertusAndySetyaputra_19092025.action_service_team"
+        sequence="10"
+        name="Service Team"/>
+</odoo>
